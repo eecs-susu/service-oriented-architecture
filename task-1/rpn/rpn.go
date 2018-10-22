@@ -75,7 +75,7 @@ func FromInfixNotation(in string) (rpn string, err error) {
 			case r == ')':
 				pushOperations(r)
 			case r != ' ':
-				err = fmt.Errorf("unexpected charcter '%c'", r)
+				err = fmt.Errorf("unexpected charcter: '%c'", r)
 				return
 			}
 		}
@@ -91,7 +91,7 @@ func Calculate(rpn string) (value float64, err error) {
 	defer func() {
 		if r := recover(); r != nil {
 			log.Println("Recover panic in Calculate", r)
-			err = fmt.Errorf("invalid notation: %s", rpn)
+			err = fmt.Errorf("invalid expression")
 		}
 	}()
 	operands := stack.New()

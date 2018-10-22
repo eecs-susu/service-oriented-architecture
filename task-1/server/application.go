@@ -14,11 +14,11 @@ import (
 func handleExpression(expression string) string {
 	postfixNotation, err := rpn.FromInfixNotation(expression)
 	if err != nil {
-		return fmt.Sprintf("invalid expression")
+		return fmt.Sprintf("error -> %s", err.Error())
 	}
 	value, err := rpn.Calculate(postfixNotation)
 	if err != nil {
-		return fmt.Sprintf("invalid expression")
+		return fmt.Sprintf("error -> %s", err.Error())
 	}
 	return strconv.FormatFloat(value, 'g', -1, 64)
 }
@@ -38,7 +38,7 @@ func handleConnection(conn net.Conn) {
 			conn.Write([]byte("Bye\n\r"))
 			log.Println(name, "disconnected")
 			break
-		} else if text != "" {
+		} else {
 			log.Println(name, "enters", text)
 			conn.Write([]byte(handleExpression(text) + "\n\r"))
 		}
