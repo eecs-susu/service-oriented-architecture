@@ -1,0 +1,16 @@
+language: go
+sudo: false
+go:
+  - "1.11.1"
+
+jobs:  
+  include:
+    - stage: "Style"             
+      name: "Style check"        
+      script: 
+        - go get -u golang.org/x/lint/golint
+        - golint -set_exit_status ./...
+    - stage: "Tests"
+      name: "Tests"
+      script:
+        - go test -timeout 30s -v ./... 

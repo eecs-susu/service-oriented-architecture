@@ -27,32 +27,33 @@ func getPriority(r rune) int {
 
 // FromInfixNotation converts infix notation to reverse polish notation
 func FromInfixNotation(in string) (rpn string, err error) {
-	defer func() {
-		if r := recover(); r != nil {
-			log.Println("Recover panic in FromInfixNotation", r)
-			err = fmt.Errorf("unable to convert %s to reverse notation", r)
-		}
-	}()
 	maybeUnary := true
 	operations := stack.New()
 	items := make([]string, 0)
 	number := new(bytes.Buffer)
-
+	isNegative := false
 	pushNumber := func() {
 		if number.Len() > 0 {
-			items = append(items, number.String())
+			val := number.String()
+			if isNegative {
+				val = "-" + val
+				isNegative = false
+			}
+			items = append(items, val)
 			number.Reset()
 		}
 	}
 
-	pushOperations := func(operation rune) {
+	pushOperations := func(operation rune) (wasOpenBracket bool) {
 		for operations.Len() > 0 && getPriority(operation) <= getPriority(operations.Peek().(rune)) {
 			if op := operations.Pop().(rune); op == '(' {
+				wasOpenBracket = true
 				break
 			} else {
 				items = append(items, string(op))
 			}
 		}
+		return
 	}
 
 	for _, r := range in {
@@ -63,17 +64,23 @@ func FromInfixNotation(in string) (rpn string, err error) {
 			pushNumber()
 			switch {
 			case strings.ContainsRune("+-/*", r):
-				if strings.ContainsRune("+-", r) && maybeUnary {
-					items = append([]string{"0"}, items...)
+				if strings.ContainsRune("-", r) && maybeUnary {
+					isNegative = !isNegative
+				} else if !(strings.ContainsRune("+", r) && maybeUnary) {
+					pushOperations(r)
+					operations.Push(r)
 				}
-				pushOperations(r)
-				operations.Push(r)
-				maybeUnary = true
+				maybeUnary = false
 			case r == '(':
 				operations.Push(r)
 				maybeUnary = true
 			case r == ')':
-				pushOperations(r)
+				findOpenBracket := pushOperations(r)
+				if !findOpenBracket {
+					err = fmt.Errorf("unexpected charcter: '%c'", r)
+					return
+				}
+				maybeUnary = false
 			case r != ' ':
 				err = fmt.Errorf("unexpected charcter: '%c'", r)
 				return
