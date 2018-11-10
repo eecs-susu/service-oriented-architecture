@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            const address = 'http://127.0.0.1:9000';
+            const handleCountOneWord = function () {
+                const args = { text: $('#CountOneWordText').val(), word: $('#CountOneWordWord').val() };
+                console.log(args);
+                $.get(address + '/countOneWord', args, function (data, status) {
+                    let result = "Word '" + args.word + "' found " + data + " times";
+                    console.log(data);
+                    $('#CountOneWordResult').empty();
+                    $('#CountOneWordResult').append(result);
+                });
+            }
+            $('#CountOneWordWord').bind('input propertychange', handleCountOneWord);
+            $('#CountOneWordText').bind('input propertychange', handleCountOneWord);
+
+            $('#CountCharacters').bind('input propertychange', function () {
+                console.log(this.value);
+                $.get(address + '/countCharacters', { text: this.value }, function (data, status) {
+                    let result = "";
+                    console.log(data);
+                    data.forEach(function (element) {
+                        console.log(element);
+                        result += "<p>Char '" + element.char + "' found " + element.count + " times</p>";
+                    });
+                    $('#CountCharactersResult').empty();
+                    $('#CountCharactersResult').append(result);
+                });
+            });
+            $('#CountWords').bind('input propertychange', function () {
+                console.log(this.value);
+                $.get(address + '/countWords', { text: this.value }, function (data, status) {
+                    let result = "";
+                    console.log(data);
+                    data.forEach(function (element) {
+
+                        if (element.word) {
+                            result += "<p>Word '" + element.word + "' found " + element.count + " times</p>";
+                        }
+                    });
+                    $('#CountWordsResult').empty();
+                    $('#CountWordsResult').append(result);
+                });
+            });
+
+             $('#CountWordsOnWebPage').bind('input propertychange', function () {
+                console.log(this.value);
+                $.get(address + '/countWordsOnWebPage', { url: this.value }, function (data, status) {
+                    let result = "";
+                    console.log(data);
+                    data.forEach(function (element) {
+
+                        if (element.word) {
+                            result += "<p>Word '" + element.word + "' found " + element.count + " times</p>";
+                        }
+                    });
+                    $('#CountWordsOnWebPageResult').empty();
+                    $('#CountWordsOnWebPageResult').append(result);
+                });
+            });
+            $('#MakeCaps').bind('input propertychange', function () {
+                $.get(address + '/makeCaps', { text: this.value }, function (data, status) {
+                    $('#MakeCapsResult').empty();
+                    $('#MakeCapsResult').append('<p>' + data + '</p>');
+                });
+            });
+        });
+    </script>
+    <style>
+        body {
+            background: #FF8C00;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        .left-column {
+            float: left;
+            width: 50%;
+            height: 300px;
+        }
+
+        .right-column {
+            float: left;
+            width: 50%;
+            padding: 0px 20px;
+            height: 300px;
+        }
+
+        .row {
+            margin-top: 50px;
+        }
+
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        textarea {
+            resize: none;
+            color: #999;
+            font-weight: 400;
+            font-size: 30px;
+            font-family: 'Ubuntu', Helvetica, Arial, sans-serif;
+            width: 100%;
+            height: 100%;
+            background: #fff;
+            border-radius: 3px;
+            /* line-height: 2em; */
+            border: none;
+            box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+
+
+        .result-container {
+            padding: 10px 20px;
+            height: 70%;
+            background: whitesmoke;
+            overflow: auto;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="row">
+        <div class="left-column" style="background-color:#aaa;">
+            <div style="height: 30%">
+                <textarea id="CountOneWordWord" placeholder="Word"></textarea>
+            </div>
+            <div style="height: 70%">
+                <textarea id="CountOneWordText" placeholder="Text"></textarea>
+            </div>
+        </div>
+        <div class="right-column" style="background-color:#333333;">
+            <h2 style="color: white">Count One Word</h2>
+            <div class="result-container" id="CountOneWordResult"></div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="left-column" style="background-color:#aaa;">
+            <textarea id="CountCharacters" placeholder="Text"></textarea>
+
+        </div>
+        <div class="right-column" style="background-color:#333333;">
+            <h2 style="color: white">Count Characters</h2>
+            <div class="result-container" id="CountCharactersResult"></div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="left-column" style="background-color:#aaa;">
+            <textarea id="CountWords" placeholder="Text"></textarea>
+
+        </div>
+        <div class="right-column" style="background-color:#333333;">
+            <h2 style="color: white">Count Words</h2>
+            <div class="result-container" id="CountWordsResult"></div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="left-column" style="background-color:#aaa;">
+            <textarea id="MakeCaps" placeholder="Text"></textarea>
+
+        </div>
+        <div class="right-column" style="background-color:#333333;">
+            <h2 style="color: white">Make Caps</h2>
+            <div class="result-container" id="MakeCapsResult"></div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="left-column" style="background-color:#aaa;">
+            <textarea id="CountWordsOnWebPage" placeholder="Url"></textarea>
+
+        </div>
+        <div class="right-column" style="background-color:#333333;">
+            <h2 style="color: white">Count word on web page</h2>
+            <div class="result-container" id="CountWordsOnWebPageResult"></div>
+        </div>
+    </div>
+</body>
+
+</html>

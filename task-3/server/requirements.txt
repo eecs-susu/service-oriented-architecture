@@ -1,0 +1,7 @@
+beautifulsoup4
+requests
+lxml==4.2.5
+pep8==1.7.1
+pytz==2018.7
+spyne==2.12.14
+suds==0.4
