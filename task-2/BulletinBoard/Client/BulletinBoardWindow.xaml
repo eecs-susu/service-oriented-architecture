@@ -1,0 +1,76 @@
+﻿<Window x:Class="Client.BulletinBoardWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Client"
+        mc:Ignorable="d"
+        Title="BulletinBoardWindow" Height="450" Width="800" ResizeMode="NoResize">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3*" />
+            <ColumnDefinition Width="1*" />
+        </Grid.ColumnDefinitions>
+        <ListView x:Name="AnnouncementsListView" Margin="1" ItemsSource="{Binding Announcements}" Visibility="Visible">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Border Padding="3" BorderBrush="#FF535353" BorderThickness="1">
+                        <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0" HorizontalAlignment="Stretch" Background="Snow">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{Binding Title}" FontSize="20"/>
+                            <StackPanel HorizontalAlignment="Right" Grid.Column="1">
+                                <TextBlock TextAlignment="Right" Text="{Binding Username}" />
+                                <TextBlock TextAlignment="Right" Text="{Binding Email}" />
+                            </StackPanel>
+                        </Grid>
+
+                            <TextBlock Grid.Row="1" Text="{Binding Body}" TextWrapping="Wrap" Width="546"/>
+                        </Grid>
+                </Border>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                </Style>
+            </ListView.ItemContainerStyle>
+        </ListView>
+        <Grid Grid.Column="1" Margin="3">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="4*" />
+                <RowDefinition Height="0.5*" />
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0" Background="#FFE6E6E6">
+                <StackPanel Orientation="Horizontal" Margin="3">
+                    <Label Content="Username: " />
+                    <Label Content="{Binding Username}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="3">
+                    <Label Content="Email: " />
+                    <Label Content="{Binding Email}" />
+                </StackPanel>
+
+            </StackPanel>
+            <StackPanel Grid.Row="1">
+                <Label Content="Title" />
+                <TextBox Margin="3" x:Name="TitleTextBox" />
+                <Label Content="Body" />
+                <RichTextBox Margin="3" Height="215" HorizontalScrollBarVisibility="Disabled"
+                             VerticalScrollBarVisibility="Visible" x:Name="BodyRichTextBox" />
+            </StackPanel>
+
+            <Button Grid.Row="2" Margin="3" Content="Publish" x:Name="PublishButton" Click="PublishButton_OnClick" />
+
+
+        </Grid>
+    </Grid>
+</Window>
