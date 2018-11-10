@@ -1,0 +1,15 @@
+.player-info-left {
+    float: left;
+}
+
+.player-info-right {
+    float: right;
+}
+
+.chosen-player {
+    background: whitesmoke!important;
+}
+
+.main-container {
+    padding: 50px;
+}

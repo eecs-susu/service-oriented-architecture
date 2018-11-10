@@ -1,0 +1,218 @@
+<div class="ui three column divided grid main-container">
+  <div class="row">
+    <div class="column">
+
+      <div class="ui cards">
+        <div class="card">
+          <div class="content">
+            <div class="header">Choose player</div>
+            <div class="ui middle aligned selection list">
+
+              <div *ngFor="let p of players" class="item" (click)="choosePlayer(p)" [ngClass]="{'chosen-player': p == player}">
+                <div class="content player-info-left">
+                  <div class="header">{{ p.name }}</div>
+                  {{p.player_class}}
+                </div>
+
+                <div class="content player-info-right">
+                  <h2>{{p.level}}</h2>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+
+    </div>
+    <div class="column">
+
+      <div class="ui cards">
+        <div class="card">
+          <div class="content">
+            <div class="header">Sent messages</div>
+            <div class="ui middle aligned celled list">
+
+              <div *ngFor="let message of sentMessages" class="item">
+                <div class="content">
+                  <div class="header">{{ message.playerTo }}</div>
+                  {{message.text}}
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+
+    </div>
+    <div class="column">
+
+      <div class="ui cards">
+        <div class="card">
+          <div class="content">
+            <div class="header">Received messages</div>
+            <div class="ui middle aligned celled list">
+
+              <div *ngFor="let message of receivedMessages" class="item">
+                <div class="content">
+                  <div class="header">{{ message.playerFrom }}</div>
+                  {{message.text}}
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div class="row">
+    <div class="column">
+
+      <div class="ui cards">
+        <div class="card">
+          <div class="content">
+            <div class="header">Create player</div>
+            <div class="row">
+                <div class="column">
+                  <div *ngIf="isWarningVisible" class="ui warning message">
+                    <i (click)="hideWarning()" class="close icon"></i>
+                    <div class="header">
+                      Something goes wrong!
+                    </div>
+                    <p *ngIf="warningText"> {{warningText}}</p>
+                  </div>
+                </div>
+              </div>
+            <form [formGroup]="form" (ngSubmit)="createPlayer(form.value)" class="ui form">
+
+              <div [class.error]="name.touched && name.dirty && name.invalid" class="field">
+                <label for="name">Name</label>
+                <input formControlName="name" id="name" type="text" >
+                <div *ngIf="name.touched && name.dirty && name.invalid" class="ui pointing red basic label">
+                  <span *ngIf="name.errors.required">
+                    Name is required.
+                  </span>
+                </div>
+              </div>
+
+              <div [class.error]="playerClass.touched && playerClass.dirty && playerClass.invalid" class="field">
+   
+                <div class="ui form">
+                    <div class="field">
+                        <label for="playerClass">Player Class</label>
+                      <select class="ui search dropdown" formControlName="playerClass" id="playerClass">
+                          <option *ngFor="let c of playerClasses" value="{{c}}">{{c}}</option>
+                      </select>
+                    </div>
+                  </div>
+
+                <div *ngIf="playerClass.touched && playerClass.dirty && playerClass.invalid" class="ui pointing red basic label">
+                  <span *ngIf="playerClass.errors.required">
+                      PlayerClass is required.
+                  </span>
+                </div>
+              </div>
+
+
+              <button class="megabtn ui fluid positive button" tabindex="3" [disabled]="form.invalid">Create
+              </button>
+            </form>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <div class="column">
+  
+        <div class="ui cards">
+            <div class="card">
+              <div class="content">
+                <div class="header">Send message</div>
+          
+
+                <form [formGroup]="sendForm" (ngSubmit)="sendMessage(sendForm.value)" class="ui form">
+    
+               
+    
+                    <div [class.error]="sendPlayer.touched && sendPlayer.dirty && sendPlayer.invalid" class="field">
+         
+                      <div class="ui form">
+                          <div class="field">
+                              <label for="sendPlayer">Player</label>
+                            <select class="ui search dropdown" formControlName="sendPlayer" id="sendPlayer">
+                                <option *ngFor="let c of sendPlayers" value="{{c.id}}">{{c.name}}</option>
+                            </select>
+                          </div>
+                        </div>
+      
+                      <div *ngIf="sendPlayer.touched && sendPlayer.dirty && sendPlayer.invalid" class="ui pointing red basic label">
+                        <span *ngIf="sendPlayer.errors.required">
+                            Player is required.
+                        </span>
+                      </div>
+                    </div>
+  
+                    <div [class.error]="text.touched && text.dirty && text.invalid" class="field">
+                        <label for="text">Text</label>
+                        <textarea formControlName="text" id="text" type="text"></textarea>
+                        <div *ngIf="text.touched && text.dirty && text.invalid" class="ui pointing red basic label">
+                          <span *ngIf="text.errors.required">
+                              Text is required.
+                          </span>
+                        </div>
+                      </div>
+      
+      
+                    <button class="megabtn ui fluid positive button" tabindex="3" [disabled]="sendForm.invalid">Create
+                    </button>
+                  </form>
+    
+              </div>
+    
+            </div>
+          </div>
+
+
+    </div>
+    <div class="column">
+ 
+      
+        <div class="ui cards">
+            <div class="card">
+              <div class="content">
+                <div class="header">Change location</div>
+                <div class="ui middle aligned selection list">
+    
+                  <div *ngFor="let l of locations" class="item" (click)="changeLocation(l)" [ngClass]="{'chosen-player': player && player.position.endsWith(l.id + '/')}">
+                    <div class="content">
+                      <div class="header">{{ l.location_id }}</div>
+                     {{l.description}}
+                    </div>
+                  </div>
+    
+                </div>
+              </div>
+    
+            </div>
+          </div>
+    
+
+
+
+    </div>
+  </div>
+</div>
+
+<button class="ui button" (click)="signOut()">
+    Sign Out
+</button>

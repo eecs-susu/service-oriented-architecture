@@ -1,0 +1,70 @@
+<div class="main">
+  <div class="ui centered grid">
+
+    <div class="row">
+      <div class="column">
+        <div *ngIf="isWarningVisible" class="ui warning message">
+          <i (click)="hideWarning()" class="close icon"></i>
+          <div class="header">
+            Something goes wrong!
+          </div>
+          <p *ngIf="warningText"> {{warningText}}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="column">
+        <div class="centered row">
+          <h4 class="ui header">Valar Morghulis</h4>
+          <form [formGroup]="form" (ngSubmit)="signIn(form.value)" class="ui form">
+            <div [class.error]="username.touched && username.dirty && username.invalid" class="field">
+              <label for="username">Username</label>
+              <input formControlName="username"
+                     id="username"
+                     type="text"
+                     tabindex="1">
+              <div *ngIf="username.touched && username.dirty && username.invalid" class="ui pointing red basic label">
+                <span *ngIf="username.errors.required">
+                  Username is required.
+                </span>
+                <span *ngIf="username.errors.minlength">
+                  Username should contains at least {{ username.errors.minlength.requiredLength }} symbols.
+                </span>
+                <span *ngIf="username.errors.pattern">
+                  Username can contains only word characters i.e. a-Z or 0-9.
+                </span>
+
+
+                <span *ngIf="username.errors.shouldBeUnique">
+                  This username already exist.
+                </span>
+              </div>
+            </div>
+            <div [class.error]="password.touched && password.dirty && password.invalid" class="field">
+              <label for="password">Password</label>
+              <input formControlName="password"
+                     id="password"
+                     type="password"
+                     tabindex="2">
+              <div *ngIf="password.touched && password.dirty && password.invalid" class="ui pointing red basic label">
+                <span *ngIf="password.errors.required">
+                  Password is required.
+                </span>
+                <span *ngIf="password.errors.minlength">
+                  Password should contains at least {{ password.errors.minlength.requiredLength }} symbols.
+                </span>
+                <span *ngIf="password.errors.pattern">
+                  Password must contains at least 1 uppercase and 1 lowercase character.
+                </span>
+              </div>
+            </div>
+            <button class="megabtn ui fluid positive button" tabindex="3" [disabled]="form.invalid">Sign In
+            </button>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
